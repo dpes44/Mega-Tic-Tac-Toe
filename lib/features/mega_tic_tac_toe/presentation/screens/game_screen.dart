@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mega_tic_tac_toe/core/theme/app_colors.dart';
@@ -244,19 +246,33 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
-  Future<void> _onCellTap(int section, int cell, AppSettings settings) async {
-    await AudioController.instance.playTapBeep();
+  void _onCellTap(int section, int cell, AppSettings settings) {
+    final bool moved = _controller.makeMove(section, cell);
+    if (!moved) {
+      return;
+    }
+    unawaited(_playMoveFeedback(settings));
+  }
 
-    if (settings.vibrationEnabled) {
+  Future<void> _playMoveFeedback(AppSettings settings) async {
+    if (settings.soundEnabled) {
+      unawaited(AudioController.instance.playTapBeep());
+    }
+
+    if (!settings.vibrationEnabled) {
+      return;
+    }
+
+    try {
       final bool hasVibrator = await Vibration.hasVibrator();
       if (hasVibrator) {
         await Vibration.vibrate(duration: 45, amplitude: 110);
       } else {
         await HapticFeedback.mediumImpact();
       }
+    } catch (_) {
+      await HapticFeedback.mediumImpact();
     }
-
-    _controller.makeMove(section, cell);
   }
 }
 

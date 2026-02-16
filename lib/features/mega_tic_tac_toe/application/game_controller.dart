@@ -33,9 +33,9 @@ class GameController extends ChangeNotifier {
     return message;
   }
 
-  void makeMove(int section, int cell) {
+  bool makeMove(int section, int cell) {
     if (!_isMoveAllowed(section, cell)) {
-      return;
+      return false;
     }
 
     final List<List<String>> updatedCells = _state.copyCellsMutable();
@@ -53,7 +53,7 @@ class GameController extends ChangeNotifier {
       );
       _pendingGameOverMessage = _winnerMessage(mainWinner);
       notifyListeners();
-      return;
+      return true;
     }
 
     if (updatedOwners.every((String owner) => owner.isNotEmpty)) {
@@ -64,7 +64,7 @@ class GameController extends ChangeNotifier {
       );
       _pendingGameOverMessage = 'Draw!';
       notifyListeners();
-      return;
+      return true;
     }
 
     _state = _state.copyWith(
@@ -78,6 +78,7 @@ class GameController extends ChangeNotifier {
     if (_state.isAiTurn) {
       _scheduleAiMove();
     }
+    return true;
   }
 
   void resetGame() {
