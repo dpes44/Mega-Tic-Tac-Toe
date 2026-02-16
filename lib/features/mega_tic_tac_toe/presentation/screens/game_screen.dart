@@ -9,6 +9,7 @@ import 'package:mega_tic_tac_toe/features/mega_tic_tac_toe/presentation/widgets/
 import 'package:mega_tic_tac_toe/features/mega_tic_tac_toe/presentation/widgets/rules_dialog.dart';
 import 'package:mega_tic_tac_toe/features/settings/application/settings_controller.dart';
 import 'package:mega_tic_tac_toe/features/settings/domain/app_settings.dart';
+import 'package:vibration/vibration.dart';
 
 class GameScreen extends StatefulWidget {
   final bool vsAi;
@@ -244,13 +245,27 @@ class _GameScreenState extends State<GameScreen> {
     );
   }
 
-  void _onCellTap(int section, int cell, AppSettings settings) {
+  Future<void> _onCellTap(int section, int cell, AppSettings settings) async {
     if (settings.soundEnabled) {
-      SystemSound.play(SystemSoundType.click);
+      Feedback.forTap(context);
+      // Alert is more noticeable than click on many Android devices.
+      await SystemSound.play(SystemSoundType.alert);
     }
+
     if (settings.vibrationEnabled) {
-      HapticFeedback.selectionClick();
+      final bool hasVibrator = await Vibration.hasVibrator();
+      if (hasVibrator) {
+        await Vibration.vibrate(duration: 45, amplitude: 110);
+      } else {
+        await HapticFeedback.mediumImpact();
+      }
     }
+
+    if (settings.soundEnabled) {
+      // Keep a light click fallback after haptics for devices with muted alert sounds.
+      await SystemSound.play(SystemSoundType.click);
+    }
+
     _controller.makeMove(section, cell);
   }
 }
