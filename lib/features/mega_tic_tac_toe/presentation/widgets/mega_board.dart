@@ -4,15 +4,9 @@ import 'package:mega_tic_tac_toe/features/mega_tic_tac_toe/domain/mega_game_stat
 
 class MegaBoard extends StatelessWidget {
   final MegaGameState state;
-  final bool animationsEnabled;
   final void Function(int section, int cell) onCellTap;
 
-  const MegaBoard({
-    super.key,
-    required this.state,
-    required this.animationsEnabled,
-    required this.onCellTap,
-  });
+  const MegaBoard({super.key, required this.state, required this.onCellTap});
 
   @override
   Widget build(BuildContext context) {
@@ -43,12 +37,8 @@ class MegaBoard extends StatelessWidget {
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
         ),
-        itemBuilder: (BuildContext context, int section) => _SectionTile(
-          section: section,
-          state: state,
-          animationsEnabled: animationsEnabled,
-          onCellTap: onCellTap,
-        ),
+        itemBuilder: (BuildContext context, int section) =>
+            _SectionTile(section: section, state: state, onCellTap: onCellTap),
       ),
     );
   }
@@ -57,13 +47,11 @@ class MegaBoard extends StatelessWidget {
 class _SectionTile extends StatelessWidget {
   final int section;
   final MegaGameState state;
-  final bool animationsEnabled;
   final void Function(int section, int cell) onCellTap;
 
   const _SectionTile({
     required this.section,
     required this.state,
-    required this.animationsEnabled,
     required this.onCellTap,
   });
 
@@ -73,9 +61,7 @@ class _SectionTile extends StatelessWidget {
     final bool isLocked = owner.isNotEmpty;
     final bool isActive = state.isSectionActive(section);
     final bool isDimmed = !isLocked && state.targetSection != null && !isActive;
-    final Duration duration = animationsEnabled
-        ? const Duration(milliseconds: 180)
-        : Duration.zero;
+    const Duration duration = Duration(milliseconds: 180);
 
     return AnimatedOpacity(
       duration: duration,

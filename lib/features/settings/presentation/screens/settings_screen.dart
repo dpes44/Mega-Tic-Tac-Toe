@@ -124,7 +124,27 @@ class SettingsScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 20),
                             const Text(
-                              'Feedback & Motion',
+                              'Background Music',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            SwitchListTile.adaptive(
+                              contentPadding: EdgeInsets.zero,
+                              title: const Text('Background Music'),
+                              subtitle: const Text(
+                                'Play soft music continuously',
+                              ),
+                              value: settings.backgroundMusicEnabled,
+                              onChanged: (bool value) => settingsController
+                                  .setBackgroundMusicEnabled(value),
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              'Feedback',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -136,7 +156,7 @@ class SettingsScreen extends StatelessWidget {
                               contentPadding: EdgeInsets.zero,
                               title: const Text('Sound Effects'),
                               subtitle: const Text(
-                                'Play system click on moves',
+                                'Play a gentle beep on each tap',
                               ),
                               value: settings.soundEnabled,
                               onChanged: (bool value) =>
@@ -151,16 +171,6 @@ class SettingsScreen extends StatelessWidget {
                               value: settings.vibrationEnabled,
                               onChanged: (bool value) =>
                                   settingsController.setVibrationEnabled(value),
-                            ),
-                            SwitchListTile.adaptive(
-                              contentPadding: EdgeInsets.zero,
-                              title: const Text('Animations'),
-                              subtitle: const Text(
-                                'Board transitions and highlights',
-                              ),
-                              value: settings.animationsEnabled,
-                              onChanged: (bool value) => settingsController
-                                  .setAnimationsEnabled(value),
                             ),
                           ],
                         ),

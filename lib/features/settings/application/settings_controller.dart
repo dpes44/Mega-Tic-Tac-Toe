@@ -5,9 +5,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsController extends ChangeNotifier {
   static const String _defaultDifficultyKey = 'default_ai_difficulty';
+  static const String _backgroundMusicEnabledKey = 'background_music_enabled';
   static const String _soundEnabledKey = 'sound_enabled';
   static const String _vibrationEnabledKey = 'vibration_enabled';
-  static const String _animationsEnabledKey = 'animations_enabled';
 
   AppSettings _settings = const AppSettings.defaults();
   bool _isInitialized = false;
@@ -21,9 +21,9 @@ class SettingsController extends ChangeNotifier {
       defaultAiDifficulty: _readDifficulty(
         prefs.getString(_defaultDifficultyKey),
       ),
+      backgroundMusicEnabled: prefs.getBool(_backgroundMusicEnabledKey) ?? true,
       soundEnabled: prefs.getBool(_soundEnabledKey) ?? true,
       vibrationEnabled: prefs.getBool(_vibrationEnabledKey) ?? true,
-      animationsEnabled: prefs.getBool(_animationsEnabledKey) ?? true,
     );
     _isInitialized = true;
     notifyListeners();
@@ -49,6 +49,16 @@ class SettingsController extends ChangeNotifier {
     await prefs.setBool(_soundEnabledKey, value);
   }
 
+  Future<void> setBackgroundMusicEnabled(bool value) async {
+    if (_settings.backgroundMusicEnabled == value) {
+      return;
+    }
+    _settings = _settings.copyWith(backgroundMusicEnabled: value);
+    notifyListeners();
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_backgroundMusicEnabledKey, value);
+  }
+
   Future<void> setVibrationEnabled(bool value) async {
     if (_settings.vibrationEnabled == value) {
       return;
@@ -57,16 +67,6 @@ class SettingsController extends ChangeNotifier {
     notifyListeners();
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_vibrationEnabledKey, value);
-  }
-
-  Future<void> setAnimationsEnabled(bool value) async {
-    if (_settings.animationsEnabled == value) {
-      return;
-    }
-    _settings = _settings.copyWith(animationsEnabled: value);
-    notifyListeners();
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_animationsEnabledKey, value);
   }
 
   AiDifficulty _readDifficulty(String? rawValue) {

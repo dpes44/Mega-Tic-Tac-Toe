@@ -2,34 +2,35 @@ import 'package:mega_tic_tac_toe/features/mega_tic_tac_toe/domain/ai_difficulty.
 
 class AppSettings {
   final AiDifficulty defaultAiDifficulty;
+  final bool backgroundMusicEnabled;
   final bool soundEnabled;
   final bool vibrationEnabled;
-  final bool animationsEnabled;
 
   const AppSettings({
     required this.defaultAiDifficulty,
+    required this.backgroundMusicEnabled,
     required this.soundEnabled,
     required this.vibrationEnabled,
-    required this.animationsEnabled,
   });
 
   const AppSettings.defaults()
     : defaultAiDifficulty = AiDifficulty.medium,
+      backgroundMusicEnabled = true,
       soundEnabled = true,
-      vibrationEnabled = true,
-      animationsEnabled = true;
+      vibrationEnabled = true;
 
   AppSettings copyWith({
     AiDifficulty? defaultAiDifficulty,
+    bool? backgroundMusicEnabled,
     bool? soundEnabled,
     bool? vibrationEnabled,
-    bool? animationsEnabled,
   }) {
     return AppSettings(
       defaultAiDifficulty: defaultAiDifficulty ?? this.defaultAiDifficulty,
+      backgroundMusicEnabled:
+          backgroundMusicEnabled ?? this.backgroundMusicEnabled,
       soundEnabled: soundEnabled ?? this.soundEnabled,
       vibrationEnabled: vibrationEnabled ?? this.vibrationEnabled,
-      animationsEnabled: animationsEnabled ?? this.animationsEnabled,
     );
   }
 }

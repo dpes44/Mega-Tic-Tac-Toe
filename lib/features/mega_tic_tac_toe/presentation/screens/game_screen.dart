@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mega_tic_tac_toe/core/theme/app_colors.dart';
+import 'package:mega_tic_tac_toe/features/audio/application/audio_controller.dart';
 import 'package:mega_tic_tac_toe/features/mega_tic_tac_toe/application/game_controller.dart';
 import 'package:mega_tic_tac_toe/features/mega_tic_tac_toe/domain/ai_difficulty.dart';
 import 'package:mega_tic_tac_toe/features/mega_tic_tac_toe/domain/mega_game_state.dart';
@@ -159,8 +160,6 @@ class _GameScreenState extends State<GameScreen> {
                                   dimension: boardSize,
                                   child: MegaBoard(
                                     state: state,
-                                    animationsEnabled:
-                                        settings.animationsEnabled,
                                     onCellTap: (int section, int cell) =>
                                         _onCellTap(section, cell, settings),
                                   ),
@@ -246,11 +245,7 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   Future<void> _onCellTap(int section, int cell, AppSettings settings) async {
-    if (settings.soundEnabled) {
-      Feedback.forTap(context);
-      // Alert is more noticeable than click on many Android devices.
-      await SystemSound.play(SystemSoundType.alert);
-    }
+    await AudioController.instance.playTapBeep();
 
     if (settings.vibrationEnabled) {
       final bool hasVibrator = await Vibration.hasVibrator();
@@ -259,11 +254,6 @@ class _GameScreenState extends State<GameScreen> {
       } else {
         await HapticFeedback.mediumImpact();
       }
-    }
-
-    if (settings.soundEnabled) {
-      // Keep a light click fallback after haptics for devices with muted alert sounds.
-      await SystemSound.play(SystemSoundType.click);
     }
 
     _controller.makeMove(section, cell);
