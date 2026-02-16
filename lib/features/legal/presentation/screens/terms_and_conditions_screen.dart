@@ -101,7 +101,28 @@ class _TermsContent extends StatelessWidget {
             ),
             SizedBox(height: 12),
             Text(
-              'If you plan to publish this app, replace this draft with legal text reviewed for your distribution region.',
+              'Governing terms updates:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: AppColors.darkWood,
+              ),
+            ),
+            SizedBox(height: 6),
+            Text(
+              'These terms may be updated over time. Continued use of the app after updates indicates acceptance of the revised terms.',
+              style: TextStyle(color: AppColors.darkWood),
+            ),
+            SizedBox(height: 12),
+            Text(
+              'Contact:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: AppColors.darkWood,
+              ),
+            ),
+            SizedBox(height: 6),
+            Text(
+              'For legal inquiries, contact: support@megatictactoe.app',
               style: TextStyle(color: AppColors.darkWood),
             ),
           ],

@@ -20,29 +20,58 @@ class MegaAiEngine {
     }
 
     final _SimState root = _SimState.fromGameState(state);
+    final BoardMove? immediateWin = _findImmediateWin(root);
+    if (immediateWin != null) {
+      return immediateWin;
+    }
+
+    if (difficulty != AiDifficulty.easy) {
+      final BoardMove? forcedBlock = _findForcedBlock(root);
+      if (forcedBlock != null) {
+        return forcedBlock;
+      }
+    }
+
     switch (difficulty) {
       case AiDifficulty.easy:
         return legalMoves[random.nextInt(legalMoves.length)];
       case AiDifficulty.medium:
-        return _pickBySearch(
-          root: root,
-          random: random,
-          depth: 2,
-          randomness: 0.25,
-          candidatePool: 3,
-          timeBudgetMs: 250,
-        );
+        try {
+          return _pickBySearch(
+            root: root,
+            random: random,
+            depth: 2,
+            randomness: 0.34,
+            candidatePool: 3,
+            timeBudgetMs: 180,
+          );
+        } on _SearchTimeout {
+          return legalMoves[random.nextInt(legalMoves.length)];
+        }
       case AiDifficulty.hard:
-        return _pickHard(root: root, random: random);
+        try {
+          return _pickHard(
+            root: root,
+            random: random,
+            legalCount: legalMoves.length,
+          );
+        } on _SearchTimeout {
+          return legalMoves[random.nextInt(legalMoves.length)];
+        }
     }
   }
 
-  BoardMove _pickHard({required _SimState root, required Random random}) {
+  BoardMove _pickHard({
+    required _SimState root,
+    required Random random,
+    required int legalCount,
+  }) {
     BoardMove? bestMove;
     final Stopwatch watch = Stopwatch()..start();
-    const int timeBudgetMs = 1300;
+    final int timeBudgetMs = _hardTimeBudget(legalCount);
+    final int maxDepth = _hardMaxDepth(legalCount);
 
-    for (int depth = 3; depth <= 6; depth++) {
+    for (int depth = 3; depth <= maxDepth; depth++) {
       try {
         final BoardMove candidate = _pickBySearch(
           root: root,
@@ -63,14 +92,19 @@ class MegaAiEngine {
       return bestMove;
     }
 
-    return _pickBySearch(
-      root: root,
-      random: random,
-      depth: 2,
-      randomness: 0,
-      candidatePool: 1,
-      timeBudgetMs: 250,
-    );
+    try {
+      return _pickBySearch(
+        root: root,
+        random: random,
+        depth: 3,
+        randomness: 0,
+        candidatePool: 1,
+        timeBudgetMs: 220,
+      );
+    } on _SearchTimeout {
+      final List<BoardMove> legalMoves = _legalMoves(root);
+      return legalMoves[random.nextInt(legalMoves.length)];
+    }
   }
 
   BoardMove _pickBySearch({
@@ -114,6 +148,52 @@ class MegaAiEngine {
     }
 
     return top[random.nextInt(top.length)].move;
+  }
+
+  BoardMove? _findImmediateWin(_SimState state) {
+    final String currentSymbol = state.currentPlayer == 0 ? 'X' : 'O';
+    for (final BoardMove move in _legalMoves(state)) {
+      final _SimState child = _applyMove(state, move);
+      if (child.winner == currentSymbol) {
+        return move;
+      }
+    }
+    return null;
+  }
+
+  BoardMove? _findForcedBlock(_SimState state) {
+    final String opponent = state.currentPlayer == 0 ? 'O' : 'X';
+    final List<BoardMove> legal = _legalMoves(state);
+    if (legal.length <= 1) {
+      return null;
+    }
+
+    final List<BoardMove> safeMoves = <BoardMove>[];
+    for (final BoardMove move in legal) {
+      final _SimState child = _applyMove(state, move);
+      final List<BoardMove> opponentMoves = _legalMoves(child);
+      bool opponentCanWinImmediately = false;
+      for (final BoardMove opponentMove in opponentMoves) {
+        final _SimState response = _applyMove(child, opponentMove);
+        if (response.winner == opponent) {
+          opponentCanWinImmediately = true;
+          break;
+        }
+      }
+      if (!opponentCanWinImmediately) {
+        safeMoves.add(move);
+      }
+    }
+
+    if (safeMoves.isEmpty || safeMoves.length == legal.length) {
+      return null;
+    }
+
+    // If exactly one move avoids immediate defeat, force it.
+    if (safeMoves.length == 1) {
+      return safeMoves.first;
+    }
+    return null;
   }
 
   int _minimax({
@@ -325,6 +405,26 @@ class MegaAiEngine {
       return 3;
     }
     return 2;
+  }
+
+  int _hardTimeBudget(int legalCount) {
+    if (legalCount > 40) {
+      return 120;
+    }
+    if (legalCount > 20) {
+      return 220;
+    }
+    return 380;
+  }
+
+  int _hardMaxDepth(int legalCount) {
+    if (legalCount > 40) {
+      return 3;
+    }
+    if (legalCount > 20) {
+      return 4;
+    }
+    return 5;
   }
 
   List<BoardMove> _orderedMoves(_SimState state, List<BoardMove> moves) {

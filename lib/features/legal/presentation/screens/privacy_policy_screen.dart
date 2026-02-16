@@ -90,7 +90,29 @@ class _PrivacyPolicyContent extends StatelessWidget {
             ),
             SizedBox(height: 12),
             Text(
-              'If you distribute this app publicly, replace this policy with your final legal text and contact details before release.',
+              'Data retention:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: AppColors.darkWood,
+              ),
+            ),
+            SizedBox(height: 6),
+            Text(
+              '- Gameplay data is stored only on your device via app settings.\n'
+              '- You can clear app data at any time through device settings.',
+              style: TextStyle(color: AppColors.darkWood),
+            ),
+            SizedBox(height: 12),
+            Text(
+              'Contact:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: AppColors.darkWood,
+              ),
+            ),
+            SizedBox(height: 6),
+            Text(
+              'For privacy questions, contact: support@megatictactoe.app',
               style: TextStyle(color: AppColors.darkWood),
             ),
           ],

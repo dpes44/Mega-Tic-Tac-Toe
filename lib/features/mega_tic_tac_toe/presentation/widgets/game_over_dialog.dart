@@ -20,9 +20,9 @@ class GameOverDialog extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: AppColors.lightWood,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.darkWood, width: 4),
+          color: AppColors.panel,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.accentDeep, width: 2),
           boxShadow: const <BoxShadow>[
             BoxShadow(color: Colors.black54, blurRadius: 15),
           ],
@@ -34,8 +34,8 @@ class GameOverDialog extends StatelessWidget {
               'Game Over',
               style: TextStyle(
                 fontSize: 28,
-                color: AppColors.darkWood,
-                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w800,
                 fontStyle: FontStyle.italic,
               ),
             ),
@@ -44,35 +44,31 @@ class GameOverDialog extends StatelessWidget {
               message,
               style: const TextStyle(
                 fontSize: 24,
-                color: AppColors.mediumWood,
-                fontWeight: FontWeight.bold,
+                color: AppColors.accentDeep,
+                fontWeight: FontWeight.w700,
               ),
             ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                TextButton(
+                OutlinedButton(
                   onPressed: onClose,
-                  child: const Text(
-                    'Close',
-                    style: TextStyle(
-                      color: AppColors.darkWood,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppColors.textPrimary,
+                    side: BorderSide(
+                      color: AppColors.textMuted.withValues(alpha: 0.45),
                     ),
                   ),
+                  child: const Text('Close'),
                 ),
-                TextButton(
+                FilledButton(
                   onPressed: onPlayAgain,
-                  child: const Text(
-                    'Play Again',
-                    style: TextStyle(
-                      color: AppColors.darkWood,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: AppColors.accentDeep,
+                    foregroundColor: Colors.white,
                   ),
+                  child: const Text('Play Again'),
                 ),
               ],
             ),

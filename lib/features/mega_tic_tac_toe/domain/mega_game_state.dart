@@ -1,6 +1,3 @@
-import 'package:flutter/foundation.dart';
-
-@immutable
 class MegaGameState {
   final List<List<String>> cells;
   final List<String> sectionOwners;

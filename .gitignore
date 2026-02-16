@@ -69,3 +69,10 @@ windows/flutter/generated_plugins.cmake
 migrate_working_dir/
 app.*.symbols
 app.*.map.json
+
+# Signing / secrets
+*.jks
+*.keystore
+*.p12
+*.pem
+*.mobileprovision

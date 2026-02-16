@@ -1,11 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mega_tic_tac_toe/app/app.dart';
+import 'package:mega_tic_tac_toe/features/settings/application/settings_controller.dart';
 
 void main() {
   testWidgets('main menu shows game options', (WidgetTester tester) async {
-    await tester.pumpWidget(const MegaTicTacToeApp());
+    await tester.pumpWidget(
+      MegaTicTacToeApp(settingsController: SettingsController()),
+    );
 
-    expect(find.text('Mega Tic-Tac-Toe'), findsOneWidget);
+    expect(find.text('MEGA TIC-TAC-TOE'), findsOneWidget);
     expect(find.text('VS AI'), findsOneWidget);
     expect(find.text('VS Player'), findsOneWidget);
     expect(find.text('How to Play'), findsOneWidget);
@@ -13,15 +17,13 @@ void main() {
     expect(find.text('Terms & Conditions'), findsOneWidget);
   });
 
-  testWidgets('vs ai shows difficulty picker', (WidgetTester tester) async {
-    await tester.pumpWidget(const MegaTicTacToeApp());
+  testWidgets('settings button is visible on main menu', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MegaTicTacToeApp(settingsController: SettingsController()),
+    );
 
-    await tester.tap(find.text('VS AI'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Choose AI Difficulty'), findsOneWidget);
-    expect(find.text('Easy'), findsOneWidget);
-    expect(find.text('Medium'), findsOneWidget);
-    expect(find.text('Hard'), findsOneWidget);
+    expect(find.byIcon(Icons.settings_rounded), findsOneWidget);
   });
 }

@@ -16,14 +16,14 @@ class RuleSection extends StatelessWidget {
         children: <Widget>[
           Row(
             children: <Widget>[
-              const Icon(Icons.arrow_right, color: AppColors.mediumWood),
+              const Icon(Icons.arrow_right, color: AppColors.accentDeep),
               const SizedBox(width: 5),
               Text(
                 title,
                 style: const TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.mediumWood,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.accentDeep,
                 ),
               ),
             ],
@@ -33,7 +33,10 @@ class RuleSection extends StatelessWidget {
             padding: const EdgeInsets.only(left: 24),
             child: Text(
               content,
-              style: const TextStyle(fontSize: 16, color: AppColors.darkWood),
+              style: const TextStyle(
+                fontSize: 16,
+                color: AppColors.textPrimary,
+              ),
             ),
           ),
           const SizedBox(height: 10),

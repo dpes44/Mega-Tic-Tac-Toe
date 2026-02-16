@@ -8,12 +8,13 @@ class RulesDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      backgroundColor: AppColors.lightWood,
+      backgroundColor: Colors.transparent,
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.darkWood, width: 2),
+          color: AppColors.panel,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: AppColors.accentDeep, width: 1.4),
         ),
         child: const SingleChildScrollView(
           child: Column(
@@ -24,8 +25,8 @@ class RulesDialog extends StatelessWidget {
                 'How to Play',
                 style: TextStyle(
                   fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.darkWood,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textPrimary,
                 ),
               ),
               SizedBox(height: 20),
@@ -85,9 +86,9 @@ class _CloseButton extends StatelessWidget {
         child: const Text(
           'Close',
           style: TextStyle(
-            color: AppColors.darkWood,
+            color: AppColors.textPrimary,
             fontSize: 18,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
