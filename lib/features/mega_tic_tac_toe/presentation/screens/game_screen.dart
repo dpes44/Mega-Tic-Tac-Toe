@@ -162,6 +162,7 @@ class _GameScreenState extends State<GameScreen> {
                                   dimension: boardSize,
                                   child: MegaBoard(
                                     state: state,
+                                    boardSkin: settings.boardSkin,
                                     onCellTap: (int section, int cell) =>
                                         _onCellTap(section, cell, settings),
                                   ),

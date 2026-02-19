@@ -13,6 +13,7 @@ void main() {
     expect(find.text('VS AI'), findsOneWidget);
     expect(find.text('VS Player'), findsOneWidget);
     expect(find.text('How to Play'), findsOneWidget);
+    expect(find.text('Board Skins'), findsOneWidget);
     expect(find.text('Privacy Policy'), findsOneWidget);
     expect(find.text('Terms & Conditions'), findsOneWidget);
   });

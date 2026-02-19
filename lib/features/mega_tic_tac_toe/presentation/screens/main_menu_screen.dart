@@ -7,6 +7,7 @@ import 'package:mega_tic_tac_toe/features/mega_tic_tac_toe/presentation/screens/
 import 'package:mega_tic_tac_toe/features/mega_tic_tac_toe/presentation/widgets/menu_button.dart';
 import 'package:mega_tic_tac_toe/features/mega_tic_tac_toe/presentation/widgets/rules_dialog.dart';
 import 'package:mega_tic_tac_toe/features/settings/application/settings_controller.dart';
+import 'package:mega_tic_tac_toe/features/settings/presentation/screens/board_skin_screen.dart';
 import 'package:mega_tic_tac_toe/features/settings/presentation/screens/settings_screen.dart';
 
 class MainMenuScreen extends StatelessWidget {
@@ -117,6 +118,13 @@ class MainMenuScreen extends StatelessWidget {
                                       icon: Icons.menu_book_rounded,
                                       onPressed: () => _showRules(context),
                                     ),
+                                    const SizedBox(height: 14),
+                                    MenuButton(
+                                      text: 'Board Skins',
+                                      subtitle: 'Pick your board style',
+                                      icon: Icons.palette_outlined,
+                                      onPressed: () => _openBoardSkins(context),
+                                    ),
                                   ],
                                 ),
                               ),
@@ -226,6 +234,16 @@ class MainMenuScreen extends StatelessWidget {
       MaterialPageRoute<void>(
         builder: (BuildContext context) =>
             SettingsScreen(settingsController: settingsController),
+      ),
+    );
+  }
+
+  void _openBoardSkins(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) =>
+            BoardSkinScreen(settingsController: settingsController),
       ),
     );
   }

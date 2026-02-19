@@ -10,6 +10,9 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double sectionSpacing = 20;
+    const double titleSpacing = 10;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -82,7 +85,7 @@ class SettingsScreen extends StatelessWidget {
                                 color: AppColors.textPrimary,
                               ),
                             ),
-                            const SizedBox(height: 12),
+                            const SizedBox(height: titleSpacing),
                             DropdownButtonFormField<AiDifficulty>(
                               isExpanded: true,
                               initialValue: settings.defaultAiDifficulty,
@@ -122,7 +125,7 @@ class SettingsScreen extends StatelessWidget {
                                 }
                               },
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: sectionSpacing),
                             const Text(
                               'Background Music',
                               style: TextStyle(
@@ -131,7 +134,7 @@ class SettingsScreen extends StatelessWidget {
                                 color: AppColors.textPrimary,
                               ),
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: titleSpacing),
                             SwitchListTile.adaptive(
                               contentPadding: EdgeInsets.zero,
                               title: const Text('Background Music'),
@@ -142,7 +145,7 @@ class SettingsScreen extends StatelessWidget {
                               onChanged: (bool value) => settingsController
                                   .setBackgroundMusicEnabled(value),
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: sectionSpacing),
                             const Text(
                               'Feedback',
                               style: TextStyle(
@@ -151,7 +154,7 @@ class SettingsScreen extends StatelessWidget {
                                 color: AppColors.textPrimary,
                               ),
                             ),
-                            const SizedBox(height: 10),
+                            const SizedBox(height: titleSpacing),
                             SwitchListTile.adaptive(
                               contentPadding: EdgeInsets.zero,
                               title: const Text('Sound Effects'),
