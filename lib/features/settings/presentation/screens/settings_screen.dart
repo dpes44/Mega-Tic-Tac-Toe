@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mega_tic_tac_toe/core/theme/app_colors.dart';
-import 'package:mega_tic_tac_toe/features/mega_tic_tac_toe/domain/ai_difficulty.dart';
 import 'package:mega_tic_tac_toe/features/settings/application/settings_controller.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -78,56 +77,7 @@ class SettingsScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             const Text(
-                              'Gameplay',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.textPrimary,
-                              ),
-                            ),
-                            const SizedBox(height: titleSpacing),
-                            DropdownButtonFormField<AiDifficulty>(
-                              isExpanded: true,
-                              initialValue: settings.defaultAiDifficulty,
-                              decoration: const InputDecoration(
-                                labelText: 'Default AI Difficulty',
-                                border: OutlineInputBorder(),
-                              ),
-                              selectedItemBuilder: (BuildContext context) {
-                                return AiDifficulty.values
-                                    .map(
-                                      (AiDifficulty difficulty) => Text(
-                                        difficulty.label,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    )
-                                    .toList();
-                              },
-                              items: AiDifficulty.values
-                                  .map(
-                                    (
-                                      AiDifficulty difficulty,
-                                    ) => DropdownMenuItem<AiDifficulty>(
-                                      value: difficulty,
-                                      child: Text(
-                                        '${difficulty.label} - ${difficulty.description}',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  )
-                                  .toList(),
-                              onChanged: (AiDifficulty? value) {
-                                if (value != null) {
-                                  settingsController.setDefaultAiDifficulty(
-                                    value,
-                                  );
-                                }
-                              },
-                            ),
-                            const SizedBox(height: sectionSpacing),
-                            const Text(
-                              'Background Music',
+                              'Sound & Haptics',
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,

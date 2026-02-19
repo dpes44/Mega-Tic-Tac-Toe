@@ -21,7 +21,6 @@ class MainMenuScreen extends StatelessWidget {
       body: AnimatedBuilder(
         animation: settingsController,
         builder: (BuildContext context, Widget? _) {
-          final settings = settingsController.settings;
           return Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
@@ -47,10 +46,10 @@ class MainMenuScreen extends StatelessWidget {
                               constraints: const BoxConstraints(maxWidth: 500),
                               child: Container(
                                 padding: const EdgeInsets.fromLTRB(
-                                  24,
-                                  26,
-                                  24,
-                                  24,
+                                  22,
+                                  22,
+                                  22,
+                                  20,
                                 ),
                                 decoration: BoxDecoration(
                                   color: AppColors.panel.withValues(
@@ -90,20 +89,20 @@ class MainMenuScreen extends StatelessWidget {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: AppColors.textMuted,
-                                        fontSize: 15,
+                                        fontSize: 14,
                                         fontStyle: FontStyle.italic,
                                       ),
                                     ),
-                                    const SizedBox(height: 28),
+                                    const SizedBox(height: 22),
                                     MenuButton(
                                       text: 'VS AI',
                                       subtitle:
-                                          'Play against adaptive AI (default: ${settings.defaultAiDifficulty.label})',
+                                          'Choose difficulty, then play',
                                       icon: Icons.smart_toy_rounded,
                                       onPressed: () =>
                                           _startGame(context, vsAi: true),
                                     ),
-                                    const SizedBox(height: 14),
+                                    const SizedBox(height: 12),
                                     MenuButton(
                                       text: 'VS Player',
                                       subtitle: 'Pass-and-play on one device',
@@ -111,14 +110,14 @@ class MainMenuScreen extends StatelessWidget {
                                       onPressed: () =>
                                           _startGame(context, vsAi: false),
                                     ),
-                                    const SizedBox(height: 14),
+                                    const SizedBox(height: 12),
                                     MenuButton(
                                       text: 'How to Play',
                                       subtitle: 'Rules and board flow',
                                       icon: Icons.menu_book_rounded,
                                       onPressed: () => _showRules(context),
                                     ),
-                                    const SizedBox(height: 14),
+                                    const SizedBox(height: 12),
                                     MenuButton(
                                       text: 'Board Skins',
                                       subtitle: 'Pick your board style',
@@ -184,8 +183,19 @@ class MainMenuScreen extends StatelessWidget {
   }
 
   Future<void> _startGame(BuildContext context, {required bool vsAi}) async {
-    final AiDifficulty aiDifficulty =
-        settingsController.settings.defaultAiDifficulty;
+    AiDifficulty aiDifficulty = settingsController.settings.defaultAiDifficulty;
+
+    if (vsAi) {
+      final AiDifficulty? selected = await _askAiDifficulty(context);
+      if (selected == null || !context.mounted) {
+        return;
+      }
+      aiDifficulty = selected;
+      await settingsController.setDefaultAiDifficulty(selected);
+      if (!context.mounted) {
+        return;
+      }
+    }
 
     if (!context.mounted) {
       return;
@@ -200,6 +210,105 @@ class MainMenuScreen extends StatelessWidget {
           settingsController: settingsController,
         ),
       ),
+    );
+  }
+
+  Future<AiDifficulty?> _askAiDifficulty(BuildContext context) {
+    final AiDifficulty selected = settingsController.settings.defaultAiDifficulty;
+    return showModalBottomSheet<AiDifficulty>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: false,
+      builder: (BuildContext sheetContext) {
+        AiDifficulty selectedDifficulty = selected;
+        return StatefulBuilder(
+          builder: (BuildContext context, void Function(void Function()) setState) {
+            return Container(
+              margin: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+              padding: const EdgeInsets.fromLTRB(14, 14, 14, 12),
+              decoration: BoxDecoration(
+                color: AppColors.panel,
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(color: AppColors.accent.withValues(alpha: 0.5)),
+                boxShadow: const <BoxShadow>[
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 18,
+                    offset: Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Text(
+                    'Choose AI Difficulty',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  ...AiDifficulty.values.map(
+                    (AiDifficulty difficulty) => ListTile(
+                      dense: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 2,
+                      ),
+                      leading: Icon(
+                        selectedDifficulty == difficulty
+                            ? Icons.check_circle_rounded
+                            : Icons.radio_button_unchecked_rounded,
+                        color: selectedDifficulty == difficulty
+                            ? AppColors.accentDeep
+                            : AppColors.textMuted,
+                      ),
+                      title: Text(
+                        difficulty.label,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      subtitle: Text(
+                        difficulty.description,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textMuted,
+                        ),
+                      ),
+                      onTap: () {
+                        setState(() => selectedDifficulty = difficulty);
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  SizedBox(
+                    width: double.infinity,
+                    child: FilledButton.icon(
+                      onPressed: () =>
+                          Navigator.pop(sheetContext, selectedDifficulty),
+                      icon: const Icon(Icons.play_arrow_rounded),
+                      label: const Text('Start Game'),
+                      style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.accentDeep,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
